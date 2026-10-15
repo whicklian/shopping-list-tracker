@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM Shopping List Tracker</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; background: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 12px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button.delete-btn { background: #dc3545; margin-left: 10px; padding: 4px 8px; font-size: 12px; }
+        ul { list-style: none; padding: 0; }
+        li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Shopping List</h2>
+        <p>Total Items: <span id="item-count" style="font-weight: bold; color: blue;">0</span></p>
+
+        <!-- Input group to add new items -->
+        <div class="input-group">
+            <input type="text" id="item-input" placeholder="Type an item...">
+            <button id="add-btn">Add Item</button>
+        </div>
+
+        <!-- The list container -->
+        <ul id="shopping-list"></ul>
+    </div>
+
+    <script>
+        // --- STEP 1: SELECTING ELEMENTS (READ) ---
+        const itemInput = document.getElementById('item-input');
+        const addBtn = document.getElementById('add-btn');
+        const shoppingList = document.getElementById('shopping-list');
+        const itemCount = document.getElementById('item-count');
+
+        // Track the total number of items
+        let totalItems = 0;
+
+        // --- STEP 4: HANDLING USER INTERACTIONS (EVENTS) ---
+        addBtn.addEventListener('click', function() {
+            // Get the text the user typed
+            const textValue = itemInput.value.trim();
+
+            // Simple validation: Don't add empty items
+            if (textValue === "") {
+                alert("Please type something first!");
+                return;
+            }
+
+            // --- STEP 3: CREATING ELEMENTS (CREATE) ---
+            // Create a new <li> element for the list
+            const li = document.createElement('li');
+            
+            // Set its content to the user's input text
+            li.textContent = textValue;
+
+            // Create a delete button for this specific item
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = "Remove";
+            deleteBtn.className = "delete-btn"; // Add styling class
+
+            // --- STEP 4 (CONTINUED): NESTED EVENT LISTENER ---
+            // Listen for clicks on this specific remove button
+            deleteBtn.addEventListener('click', function() {
+                // --- STEP 3 (CONTINUED): REMOVING ELEMENTS (DELETE) ---
+                li.remove(); // Removes the entire <li> row from the DOM
+
+                // --- STEP 2 (CONTINUED): UPDATING VALUES ---
+                totalItems--;
+                itemCount.textContent = totalItems;
+            });
+
+            // Put the delete button inside our new list item row
+            li.appendChild(deleteBtn);
+
+            // Put the complete list item inside the <ul> on the page
+            shoppingList.appendChild(li);
+
+            // --- STEP 2: MODIFYING CONTENT (UPDATE) ---
+            // Increment the counter and update the text on screen
+            totalItems++;
+            itemCount.textContent = totalItems;
+
+            // Clear the text input box so the user can type the next item
+            itemInput.value = "";
+        });
+    </script>
+</body>
+</html>
